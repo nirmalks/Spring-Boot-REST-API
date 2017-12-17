@@ -5,9 +5,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,19 +28,19 @@ public class CricketController {
 	@Autowired
 	CricketerRepository cricketerRepository;
 	
-	@RequestMapping(value = "/api/cricketer/{id}" , method = RequestMethod.GET)
+	@GetMapping("/api/cricketer/{id}")
 	public ResponseEntity<Cricketer> getCricketer(@PathVariable("id") Long id) {
 		Cricketer cricketer = cricketerService.findById(id);
 		return new ResponseEntity<Cricketer>(cricketer, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/api/cricketer/" , method = RequestMethod.GET)
+	@GetMapping("/api/cricketers/")
 	public ResponseEntity<List<Cricketer>> getAllCricketers() {
 		ArrayList<Cricketer >cricketersList = (ArrayList<Cricketer>) cricketerService.getAllPlayers();
 		return new ResponseEntity<List<Cricketer>>(cricketersList, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/api/cricketer/" , method = RequestMethod.POST , consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping("/api/cricketer/")
 	public ResponseEntity<Cricketer> addCricketer(@RequestBody Cricketer cricketer) {
 		System.out.print(cricketer);
 		Cricketer cCricketer = new Cricketer();
@@ -48,7 +51,7 @@ public class CricketController {
 		return new ResponseEntity<Cricketer>(cricketer, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/api/cricketer/{id}" , method = RequestMethod.PUT)
+	@PutMapping("/api/cricketer/{id}")
 	public ResponseEntity<Cricketer> updateCricketer(@PathVariable("id") Long id, @RequestBody Cricketer cricketer) {
 		Cricketer cCricketer = cricketerService.findById(id);
 		cCricketer.setCountry(cricketer.getCountry());
@@ -58,7 +61,7 @@ public class CricketController {
 		return new ResponseEntity<Cricketer>(cricketer, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/api/cricketer/{id}" , method = RequestMethod.DELETE)
+	@DeleteMapping("/api/cricketer/{id}")
 	public ResponseEntity<String> deleteCricketer(@PathVariable("id") Long id) {
 		Cricketer cCricketer = cricketerService.findById(id);
 		cricketerRepository.delete(cCricketer);
