@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,7 +35,7 @@ public class CricketController {
 		Cricketer cricketer = cricketerService.findById(id);
 		return new ResponseEntity<Cricketer>(cricketer, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/api/cricketers/")
 	public ResponseEntity<List<Cricketer>> getAllCricketers() {
 		ArrayList<Cricketer >cricketersList = (ArrayList<Cricketer>) cricketerService.getAllPlayers();
@@ -41,6 +43,7 @@ public class CricketController {
 	}
 	
 	@PostMapping("/api/cricketer/")
+	@CacheEvict(value = "cricketers", allEntries=true)
 	public ResponseEntity<Cricketer> addCricketer(@RequestBody Cricketer cricketer) {
 		System.out.print(cricketer);
 		Cricketer cCricketer = new Cricketer();
@@ -52,6 +55,7 @@ public class CricketController {
 	}
 	
 	@PutMapping("/api/cricketer/{id}")
+	@CacheEvict(value = "cricketers", allEntries=true)
 	public ResponseEntity<Cricketer> updateCricketer(@PathVariable("id") Long id, @RequestBody Cricketer cricketer) {
 		Cricketer cCricketer = cricketerService.findById(id);
 		cCricketer.setCountry(cricketer.getCountry());
@@ -60,7 +64,8 @@ public class CricketController {
 		cricketerRepository.save(cCricketer);
 		return new ResponseEntity<Cricketer>(cricketer, HttpStatus.OK);
 	}
-	
+
+	@CacheEvict(value = "cricketers", allEntries=true)
 	@DeleteMapping("/api/cricketer/{id}")
 	public ResponseEntity<String> deleteCricketer(@PathVariable("id") Long id) {
 		Cricketer cCricketer = cricketerService.findById(id);

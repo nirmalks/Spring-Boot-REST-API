@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.example.model.Cricketer;
@@ -22,7 +23,8 @@ public class CricketerServiceImpl implements CricketerService{
 	public Cricketer findById(Long id){
 		return cricketerRepository.findOne(id);
 	}
-		
+
+	@Cacheable("cricketers")
 	public List<Cricketer> getAllPlayers(){
 		return cricketerRepository.findAll();
 	}
