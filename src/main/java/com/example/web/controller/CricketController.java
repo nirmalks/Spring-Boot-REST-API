@@ -6,6 +6,10 @@ import java.util.List;
 import com.example.service.CricketerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,9 +32,11 @@ public class CricketController {
 	CricketerRepository cricketerRepository;
 	
 	@GetMapping("/api/cricketer/{id}")
-	public ResponseEntity<Cricketer> getCricketer(@PathVariable("id") Long id) {
-		Cricketer cricketer = cricketerService.findById(id);
-		return new ResponseEntity<Cricketer>(cricketer, HttpStatus.OK);
+	public PagedResources<Cricketer> getCricketer(@PathVariable("id") Long id, Pageable pageable ,
+												  PagedResourcesAssembler pagedResourcesAssembler) {
+		Page<Cricketer> cricketerPage = cricketerRepository.findById(id,pageable);
+		PagedResources<Cricketer>result = pagedResourcesAssembler.toResource(cricketerPage);
+		return result;
 	}
 
 	@GetMapping("/api/cricketers/")
